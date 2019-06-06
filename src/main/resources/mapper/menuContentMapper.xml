@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wxpayhelper.Mapper.MenuContentMapper">
+
+    <resultMap type="com.example.wxpayhelper.Entity.MenuContent.RootMenu" id="RootMenuMap">
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap type="com.example.wxpayhelper.Entity.MenuContent.ChildMenu" id="ChildMenuMap">
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="mother_id" property="motherId" jdbcType="INTEGER" />
+        <result column="food_name" property="foodName" jdbcType="VARCHAR" />
+        <result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+        <result column="rating" property="rating" jdbcType="INTEGER" />
+        <result column="sales" property="sales" jdbcType="INTEGER" />
+        <result column="numb" property="numb" jdbcType="INTEGER" />
+        <result column="price" property="price" jdbcType="DOUBLE" />
+    </resultMap>
+
+    <select id="getFirstMenuInfo" resultMap="RootMenuMap">
+        select
+        *
+        from my_admin_menu_root
+    </select>
+
+    <select id="getChildMenuByRootId" parameterType="java.lang.Integer" resultMap="ChildMenuMap">
+        select
+        *
+        from my_admin_menu_child
+        where mother_id=#{id}
+    </select>
+
+    <select id="getChildMenuById" parameterType="java.lang.Integer" resultMap="ChildMenuMap">
+        select
+        *
+        from my_admin_menu_child
+        where id=#{id}
+    </select>
+
+    <update id="updateRootMenuInfo" parameterType="java.util.Map">
+        update
+        my_admin_menu_root
+        set type_name=#{typeName}
+        where id=#{id}
+    </update>
+
+    <update id="updateChildMenu" parameterType="java.util.Map">
+        update
+        my_admin_menu_child
+        set
+        food_name=#{foodName},
+        price=#{price},
+        rating=#{rating},
+        pic_url=#{picUrl}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteChildMenu" parameterType="java.lang.Integer">
+        delete from
+        my_admin_menu_child
+        where id=#{id}
+    </delete>
+
+    <insert id="insertRootMenu" parameterType="java.lang.String">
+        insert into
+        my_admin_menu_root
+        (type_name)
+        values
+        (#{typeName})
+    </insert>
+
+    <delete id="deleteRootMenu" parameterType="java.lang.Integer">
+        delete from
+        my_admin_menu_root
+        where id=#{id}
+    </delete>
+
+    <insert id="insertChildMenu" parameterType="java.util.Map">
+        insert into
+        my_admin_menu_child (
+        food_name, pic_url, mother_id, price, rating
+        )
+        values (
+        #{foodName}, #{picUrl}, #{motherId}, #{price}, #{rating}
+        )
+    </insert>
+
+</mapper>
